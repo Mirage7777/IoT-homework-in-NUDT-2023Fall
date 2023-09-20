@@ -32,9 +32,6 @@ def main():
         if peer_address:
             print("Completed listening for peer: %s" % str(peer_address))
             break
-        else:
-            print("continue")
-            break
 
     print("Accepting...")
     conn = scn.accept()[0]
@@ -59,25 +56,23 @@ def main():
     # 接收文件
     cnt = 0
     while True:
-        cnt+=1
         try:
             message = conn.read()
         except SSLError as err:
-            if err.errno ==502:
+            if err.errno == 502:
                 continue
-            if err.args[0] ==SSL_ERROR_ZERO_RETURN:
+            if err.args[0] == SSL_ERROR_ZERO_RETURN:
                 break
             raise
         data = message.decode()
-        print("from client",data)
+        print("from client:",data)
         cmd_filename = data.split(' ')
-        if cmd_filename[0] != "ls" and cmd_filename !="get":
+        if cmd_filename[0] != 'ls' and cmd_filename[0] != "get":
             conn.write("please input True cmd")
             continue
-    
         else:
             if cmd_filename[0] == "ls":
-                obj = subprocess.Popen(data,shell=True,stdout=subprocess.PIPE)
+                obj = subprocess.Popen(data,shell = True,stdout = subprocess.PIPE)
                 cmd_result = obj.stdout.read()
                 conn.write(cmd_result)
             else:
@@ -85,17 +80,16 @@ def main():
                 if filename[0] == "/":
                     filedir = filename
                 else:
-                    if filename[2] == "./":
+                    if filename[:2] == "./":
                         filename = filename[2:-1]
                     filedir = path.join(current_path,filename)
-                with open(filedir,'r') as fd:
+                with open(filedir,"r") as fd:
                     while True:
                         byte = fd.read(blocksize)
                         if not byte:
-                            conn.write("Already Send".encode)
+                            conn.write("Already Send".encode())
                             break
                         conn.write(byte.encode())
-    
 
 
     # shutdown
