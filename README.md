@@ -5,4 +5,6 @@ If I have time, I will share how to pass the experiment.
 
 Hope it will help more students to pass this class.
 
+## Update in 2025
+This class alomst exixt for about one semester
 
